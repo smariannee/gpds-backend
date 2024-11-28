@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+    mysql-db:
+        image: mysql:8.0
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: autos-10a
+            MYSQL_USER: autos
+            MYSQL_PASSWORD: passautos
+        #crear un volumen
+        volumes:
+            - ./mysql-data:/var/lib/mysql
+    app:
+        build:
+           context: .
+           dockerfile: Dockerfile
+        environment:
+            SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/autos-10a
+            SPRING_DATASOURCE_USERNAME: autos
+            SPRING_DATASOURCE_PASSWORD: passautos
+            SPRING_JPA_HIBERNATE_DDL_AUTO: update
+        ports:
+            - "8082:8080"
+        depends_on:
+            - mysql-db
